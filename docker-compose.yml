@@ -6,11 +6,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URI=${MONGODB_URI}
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=file:./dev.db
       - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL}
-    depends_on:
-      - mongodb
+    volumes:
+      - ./prisma:/app/prisma
     restart: always
 
   bot:
@@ -18,17 +17,6 @@ services:
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - WEBAPP_URL=${WEBAPP_URL}
-      - MONGODB_URI=${MONGODB_URI}
-    depends_on:
-      - mongodb
-    restart: always
-
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
     restart: always
 
   nginx:
@@ -41,7 +29,4 @@ services:
       - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - webapp
-    restart: always
-
-volumes:
-  mongodb_data: 
+    restart: always 
