@@ -289,8 +289,15 @@ cython_debug/
 
 .env
 
+*.accdb
+*.db
+*.dbf
+*.mdb
+*.pdb
+*.sqlite3
+
 ## ignoring target file
 target/
 
 
-# End of https://mrkandreev.name/snippets/gitignore-generator/#Web,Node,pydev,react,Python,dotenv,Java-Web,py
+# End of https://mrkandreev.name/snippets/gitignore-generator/#Web,Node,pydev,react,Python,dotenv,Database,Java-Web,py
