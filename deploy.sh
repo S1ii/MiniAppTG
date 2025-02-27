@@ -7,13 +7,16 @@ pm2 stop all
 git pull
 
 # Копирование production переменных окружения
-cp .env.production .env.local
+cp .env.production .env
 
 # Установка Node.js зависимостей
 npm install
 
-# Установка Python зависимостей
-python3 -m pip install -r python_bot/requirements.txt
+# Установка Python зависимостей с правами суперпользователя
+sudo pip3 install -r python_bot/requirements.txt
+
+# Экспорт переменных окружения для Prisma
+export $(cat .env | xargs)
 
 # Сборка Next.js проекта
 npm run build
