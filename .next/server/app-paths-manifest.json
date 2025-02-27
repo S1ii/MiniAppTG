@@ -1,6 +1,7 @@
 {
-  "/page": "app/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/gossips/[id]/comment/route": "app/api/gossips/[id]/comment/route.js",
   "/api/gossips/[id]/like/route": "app/api/gossips/[id]/like/route.js",
   "/api/gossips/route": "app/api/gossips/route.js",
-  "/api/gossips/[id]/comment/route": "app/api/gossips/[id]/comment/route.js"
+  "/page": "app/page.js"
 }

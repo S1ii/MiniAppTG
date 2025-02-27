@@ -72,10 +72,9 @@ async def notify_about_new_comment(
         await app.bot.send_message(
             chat_id=gossip_author.chatId,
             text=(
-                f"💬 Новый комментарий от {comment_author_name} "
-                f"на вашу сплетню:\n\n"
-                f"Сплетня: {gossip_content}\n\n"
-                f"Комментарий: {comment_content}"
+                f"💬 Новый комментарий от {comment_author_name} на вашу сплетню:\n\n"
+                f"Ваша сплетня: {gossip_content}\n\n"
+                f"Комментарий от {comment_author_name}: {comment_content}"
             ),
             parse_mode='HTML'
         )

@@ -1,4 +1,4 @@
-// File: D:\Проекты\Cursor\MiniAppTG\app\api\gossips\[id]\comment\route.ts
+// File: /root/MiniAppTG/app/api/gossips/[id]/comment/route.ts
 import * as entry from '../../../../../../../app/api/gossips/[id]/comment/route.js'
 import type { NextRequest } from 'next/server.js'
 

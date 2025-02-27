@@ -141,7 +141,7 @@ export default function GossipCard({ gossip, onLike, onComment, isLiked }: Gossi
                 type="text"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder={isCommentCooldown ? "Подождите 5 секунд..." : "Написать комментарий..."}
+                placeholder="Написать комментарий..."
                 disabled={isCommentCooldown}
                 className="input-primary flex-1"
               />

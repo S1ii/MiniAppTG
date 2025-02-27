@@ -186,7 +186,7 @@ function GossipApp() {
               setNewGossip(e.target.value);
               setCharCount(e.target.value.length);
             }}
-            placeholder={isGossipCooldown ? "Подождите..." : "Поделитесь сплетней..."}
+            placeholder="Поделитесь сплетней..."
             disabled={isGossipCooldown}
             className="input-primary mb-2 sm:mb-4 w-full"
             rows={3}

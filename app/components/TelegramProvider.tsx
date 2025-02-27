@@ -49,37 +49,8 @@ export function TelegramProvider({ children }: { children: React.ReactNode }) {
 
         // Проверяем, что приложение запущено в правильном контексте
         if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
-          // Показываем сообщение об ошибке и кнопку для перехода в бота
-          const botUsername = 't3st1k_bot'; // Имя вашего бота
-          const errorContainer = document.createElement('div');
-          errorContainer.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 90%;
-            width: 300px;
-          `;
-          errorContainer.innerHTML = `
-            <h3 style="margin: 0 0 15px 0; color: #333;">Ошибка запуска</h3>
-            <p style="margin: 0 0 20px 0; color: #666;">Пожалуйста, откройте это приложение через Telegram бота</p>
-            <a href="https://t.me/${botUsername}" style="
-              display: inline-block;
-              background: #0088cc;
-              color: white;
-              text-decoration: none;
-              padding: 10px 20px;
-              border-radius: 5px;
-              font-weight: 500;
-            ">Открыть бота</a>
-          `;
-          document.body.appendChild(errorContainer);
-          setIsLoading(false);
+          // Перенаправляем пользователя на бота
+          window.location.href = 'https://t.me/t3st1k_bot/gossip';
           return;
         }
 
