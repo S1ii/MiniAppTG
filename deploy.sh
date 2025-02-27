@@ -12,8 +12,12 @@ cp .env.production .env
 # Установка Node.js зависимостей
 npm install
 
-# Установка Python зависимостей с правами суперпользователя
-sudo pip3 install -r python_bot/requirements.txt
+# Создание и активация виртуального окружения Python
+python3 -m venv venv
+source venv/bin/activate
+
+# Установка Python зависимостей в виртуальное окружение
+pip install -r python_bot/requirements.txt
 
 # Экспорт переменных окружения для Prisma, игнорируя комментарии
 export $(grep -v '^#' .env | xargs)
@@ -23,6 +27,9 @@ npm run build
 
 # Применение миграций Prisma
 npx prisma migrate deploy
+
+# Деактивация виртуального окружения
+deactivate
 
 # Запуск приложений через PM2
 pm2 start ecosystem.config.js

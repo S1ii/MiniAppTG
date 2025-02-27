@@ -12,7 +12,7 @@ module.exports = {
     {
       name: 'gossipbot-telegram',
       script: 'python_bot/main.py',
-      interpreter: 'python3',
+      interpreter: './venv/bin/python3',
       env: {
         NODE_ENV: 'production',
       },
