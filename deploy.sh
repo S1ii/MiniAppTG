@@ -15,8 +15,8 @@ npm install
 # Установка Python зависимостей с правами суперпользователя
 sudo pip3 install -r python_bot/requirements.txt
 
-# Экспорт переменных окружения для Prisma
-export $(cat .env | xargs)
+# Экспорт переменных окружения для Prisma, игнорируя комментарии
+export $(grep -v '^#' .env | xargs)
 
 # Сборка Next.js проекта
 npm run build
