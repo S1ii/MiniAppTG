@@ -1,0 +1,40 @@
+{
+  "name": "gossip-telegram-mini-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clear-db": "ts-node scripts/clear-db.ts",
+    "bot": "node start-bot.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "autoprefixer": "^10.4.17",
+    "bcryptjs": "^2.4.3",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.1.0",
+    "next": "^14.1.0",
+    "postcss": "^8.4.33",
+    "prisma": "^6.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0",
+    "tailwindcss": "^3.4.1",
+    "telegraf": "^4.15.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

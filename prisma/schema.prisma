@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Gossip {
+  id             String    @id @default(cuid())
+  content        String
+  authorId       String
+  authorUsername String
+  likes         Int       @default(0)
+  createdAt     DateTime  @default(now())
+  comments      Comment[]
+  likedBy       Like[]
+}
+
+model Comment {
+  id             String   @id @default(cuid())
+  content        String
+  authorId       String
+  authorUsername String
+  createdAt     DateTime @default(now())
+  gossip        Gossip   @relation(fields: [gossipId], references: [id])
+  gossipId      String
+}
+
+model Like {
+  id       String   @id @default(cuid())
+  userId   String
+  gossip   Gossip   @relation(fields: [gossipId], references: [id])
+  gossipId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, gossipId])
+}
+
+model BotUser {
+  id        String   @id
+  username  String?
+  firstName String
+  chatId    String   @unique
+  createdAt DateTime @default(now())
+  lastSeen  DateTime @default(now())
+} 
