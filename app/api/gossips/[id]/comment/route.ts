@@ -4,7 +4,7 @@ import { validateMessage, checkMessageFrequency } from '../../../../../lib/messa
 
 // Функция для отправки уведомления о комментарии через Python-сервер
 async function sendCommentNotification(
-  gossipAuthorId: string,
+  gossipAuthorId: string | bigint,
   commentAuthorId: string,
   gossipContent: string,
   commentContent: string
@@ -18,13 +18,16 @@ async function sendCommentNotification(
     }
     const botUser = await botUserResponse.json();
 
+    // Преобразуем ID в строку, если это BigInt
+    const gossipAuthorIdStr = typeof gossipAuthorId === 'bigint' ? gossipAuthorId.toString() : gossipAuthorId;
+
     const response = await fetch('http://localhost:3001/notify/comment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        gossip_author_id: gossipAuthorId,
+        gossip_author_id: gossipAuthorIdStr,
         comment_author_username: botUser.anonymousName,
         gossip_content: gossipContent,
         comment_content: commentContent

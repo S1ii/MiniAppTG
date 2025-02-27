@@ -58,23 +58,22 @@ async def notify_about_new_comment(
             logger.warning(f"Автор сплетни не найден (ID: {gossip_author_id})")
             return
 
-        # Ищем автора комментария по username
-        comment_author = None
-        all_users = await db.get_all_bot_users()
-        for user in all_users:
-            if user.username == comment_author_username:
-                comment_author = user
-                break
+        # Получаем анонимное имя автора комментария напрямую из параметра
+        comment_author_name = comment_author_username
 
-        comment_author_name = comment_author.anonymousName if comment_author else "Аноним"
+        # Форматируем текст сплетни (первые 4 слова + ...)
+        words = gossip_content.split()
+        formatted_gossip = ' '.join(words[:4])
+        if len(words) > 4:
+            formatted_gossip += '...'
 
         logger.info(f"Отправляю уведомление о комментарии автору {gossip_author.anonymousName}")
         await app.bot.send_message(
             chat_id=gossip_author.chatId,
             text=(
                 f"💬 Новый комментарий от {comment_author_name} на вашу сплетню:\n\n"
-                f"Ваша сплетня: {gossip_content}\n\n"
-                f"Комментарий от {comment_author_name}: {comment_content}"
+                f"Ваша сплетня: {formatted_gossip}\n\n"
+                f"Комментарий: {comment_content}"
             ),
             parse_mode='HTML'
         )

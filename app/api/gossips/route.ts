@@ -3,8 +3,11 @@ import { prisma } from '../../../lib/prisma';
 import { validateMessage, checkMessageFrequency } from '../../../lib/messageValidation';
 
 // Функция для отправки уведомления через Python-сервер
-async function sendNotification(authorUsername: string, authorId: string, content: string) {
+async function sendNotification(authorUsername: string, authorId: string | bigint, content: string) {
   try {
+    // Преобразуем ID в строку, если это BigInt
+    const authorIdStr = typeof authorId === 'bigint' ? authorId.toString() : authorId;
+
     const response = await fetch('http://localhost:3001/notify/gossip', {
       method: 'POST',
       headers: {
@@ -12,7 +15,7 @@ async function sendNotification(authorUsername: string, authorId: string, conten
       },
       body: JSON.stringify({
         author_username: authorUsername,
-        author_id: authorId,
+        author_id: authorIdStr,
         content: content
       })
     });
