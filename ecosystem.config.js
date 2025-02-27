@@ -11,7 +11,8 @@ module.exports = {
     },
     {
       name: 'gossipbot-telegram',
-      script: 'dist/bot/index.js',
+      script: 'python_bot/main.py',
+      interpreter: 'python3',
       env: {
         NODE_ENV: 'production',
       },

@@ -6,14 +6,14 @@ pm2 stop all
 # Обновление кода из репозитория
 git pull
 
-# Установка зависимостей
+# Установка Node.js зависимостей
 npm install
 
-# Сборка проекта
-npm run build
+# Установка Python зависимостей
+pip install -r python_bot/requirements.txt
 
-# Сборка бота
-npm run build:bot
+# Сборка Next.js проекта
+npm run build
 
 # Применение миграций Prisma
 npx prisma migrate deploy
