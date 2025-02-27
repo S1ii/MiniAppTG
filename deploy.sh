@@ -6,11 +6,14 @@ pm2 stop all
 # Обновление кода из репозитория
 git pull
 
+# Копирование production переменных окружения
+cp .env.production .env.local
+
 # Установка Node.js зависимостей
 npm install
 
 # Установка Python зависимостей
-pip install -r python_bot/requirements.txt
+python3 -m pip install -r python_bot/requirements.txt
 
 # Сборка Next.js проекта
 npm run build
