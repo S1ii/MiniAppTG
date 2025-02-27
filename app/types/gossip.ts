@@ -1,29 +1,6 @@
-export interface Like {
-  userId: string;
-}
+import { Gossip, Comment, Like } from '@prisma/client';
 
-export interface Author {
-  id: number;
-  username: string;
-}
-
-export interface Comment {
-  id: string;
-  content: string;
-  author: Author;
-  authorUsername?: string;
-  createdAt: string | Date;
-}
-
-export interface Gossip {
-  id: string;
-  content: string;
-  author: Author;
-  authorUsername?: string;
-  createdAt: string | Date;
-  likes?: number;
-  likedBy: Like[];
+export type GossipWithComments = Gossip & {
   comments: Comment[];
-}
-
-export interface GossipWithComments extends Gossip {} 
+  likedBy: Like[];
+}; 

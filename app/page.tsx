@@ -234,15 +234,7 @@ function GossipApp() {
         {gossips.map((gossip, index) => (
           <div key={gossip.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
             <GossipCard
-              gossip={{
-                ...gossip,
-                authorUsername: gossip.author.username,
-                likes: gossip.likedBy.length,
-                comments: gossip.comments.map(comment => ({
-                  ...comment,
-                  authorUsername: comment.author.username
-                }))
-              }}
+              gossip={gossip}
               onLike={handleLike}
               onComment={handleComment}
               isLiked={gossip.likedBy?.some(like => like.userId === user?.id?.toString()) || false}

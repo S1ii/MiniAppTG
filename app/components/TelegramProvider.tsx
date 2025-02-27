@@ -50,7 +50,7 @@ export function TelegramProvider({ children }: { children: React.ReactNode }) {
         // Проверяем, что приложение запущено в правильном контексте
         if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
           // Показываем сообщение об ошибке и кнопку для перехода в бота
-          const botUsername = 'GossipMiniAppBot'; // Имя вашего бота
+          const botUsername = 't3st1k_bot'; // Имя вашего бота
           const errorContainer = document.createElement('div');
           errorContainer.style.cssText = `
             position: fixed;
