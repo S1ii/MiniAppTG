@@ -13,13 +13,13 @@ const nextConfig = {
     return [
       {
         source: '/ws',
-        destination: 'http://0.0.0.0:3001/ws'
+        destination: 'http://127.0.0.1:3001/ws'
       }
     ];
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['gossipbot.social'],
+      allowedOrigins: ['gossipbot.social', 'www.gossipbot.social'],
     },
   },
   async headers() {
@@ -30,6 +30,7 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,DELETE,OPTIONS' },
           { key: 'Access-Control-Allow-Headers', value: 'X-Requested-With, Accept, Content-Type' },
+          { key: 'X-Next-Server', value: 'true' },
         ],
       },
     ]
