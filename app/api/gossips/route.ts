@@ -2,11 +2,50 @@ import { NextResponse } from 'next/server';
 import { prisma } from '../../../lib/prisma';
 import { validateMessage, checkMessageFrequency } from '../../../lib/messageValidation';
 
+// Функция для удаления Markdown-разметки из текста
+function stripMarkdown(text: string): string {
+  // Удаляем заголовки
+  let cleanText = text.replace(/#+\s+/g, '');
+  
+  // Удаляем жирный текст
+  cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '$1');
+  
+  // Удаляем курсив
+  cleanText = cleanText.replace(/\*(.*?)\*/g, '$1');
+  
+  // Удаляем код
+  cleanText = cleanText.replace(/`(.*?)`/g, '$1');
+  
+  // Удаляем ссылки, оставляя только текст
+  cleanText = cleanText.replace(/\[(.*?)\]\(.*?\)/g, '$1');
+  
+  // Удаляем горизонтальные линии
+  cleanText = cleanText.replace(/---+/g, '');
+  
+  // Удаляем блоки цитат
+  cleanText = cleanText.replace(/>\s+(.*)/g, '$1');
+  
+  // Удаляем маркеры списков
+  cleanText = cleanText.replace(/^\s*[-*+]\s+/gm, '');
+  cleanText = cleanText.replace(/^\s*\d+\.\s+/gm, '');
+  
+  return cleanText.trim();
+}
+
 // Функция для отправки уведомления через Python-сервер
-async function sendNotification(authorUsername: string, authorId: string | bigint, content: string) {
+async function sendNotification(authorUsername: string, authorId: string | bigint, content: string, title?: string | null) {
   try {
     // Преобразуем ID в строку, если это BigInt
     const authorIdStr = typeof authorId === 'bigint' ? authorId.toString() : authorId;
+    
+    // Очищаем контент от Markdown-разметки
+    const cleanContent = stripMarkdown(content);
+    
+    // Формируем текст уведомления с заголовком, если он есть
+    let notificationText = cleanContent;
+    if (title) {
+      notificationText = `${title}\n\n${cleanContent}`;
+    }
 
     const response = await fetch('http://localhost:3001/notify/gossip', {
       method: 'POST',
@@ -16,7 +55,7 @@ async function sendNotification(authorUsername: string, authorId: string | bigin
       body: JSON.stringify({
         author_username: authorUsername,
         author_id: authorIdStr,
-        content: content
+        content: notificationText
       })
     });
 
@@ -122,6 +161,7 @@ export async function POST(request: Request) {
 
     const newGossip = await prisma.gossip.create({
       data: {
+        title: body.title || null,
         content: body.content,
         authorId: authorId,
         authorUsername: botUser.anonymousName
@@ -133,7 +173,7 @@ export async function POST(request: Request) {
     });
 
     // Отправляем уведомление через Python-сервер
-    await sendNotification(botUser.anonymousName, authorId, body.content);
+    await sendNotification(botUser.anonymousName, authorId, body.content, body.title);
 
     return NextResponse.json(newGossip, { status: 201 });
   } catch (error) {

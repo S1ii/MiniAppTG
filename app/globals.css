@@ -24,49 +24,64 @@
 
 :root {
   --foreground-rgb: 33, 33, 33;
-  --background-start-rgb: 245, 245, 245;
-  --background-end-rgb: 250, 250, 250;
+  --background-start-rgb: 249, 250, 251;
+  --background-end-rgb: 243, 244, 246;
   --card-background: 255, 255, 255;
-  --text-primary: 33, 33, 33;
-  --text-secondary: 75, 75, 75;
-  --border-color: 0, 0, 0;
-  --accent-color: 255, 86, 86;
-  --accent-light: 255, 179, 179;
-  --accent-dark: 204, 51, 51;
-  --hover-bg: 250, 250, 250;
-  --speed-lines: 240, 240, 240;
+  --text-primary: 15, 23, 42;
+  --text-secondary: 71, 85, 105;
+  --border-color: 107, 114, 128;
+  --accent-color: 239, 68, 68;
+  --accent-light: 239, 68, 68, 0.1;
+  --accent-text: 255, 255, 255;
+  --hover-bg: 249, 250, 251;
+  --secondary-bg: 255, 255, 255;
+  --speed-lines: 243, 244, 246;
+  --pattern-color: 107, 114, 128, 0.15;
+  --dot-size: 2px;
+  --dot-space: 22px;
 }
 
 [data-theme='dark'] {
   --foreground-rgb: 229, 231, 235;
-  --background-start-rgb: 17, 24, 39;
-  --background-end-rgb: 31, 41, 55;
-  --card-background: 24, 33, 47;
-  --text-primary: 229, 231, 235;
-  --text-secondary: 156, 163, 175;
+  --background-start-rgb: 15, 23, 42;
+  --background-end-rgb: 30, 41, 59;
+  --card-background: 31, 41, 55;
+  --text-primary: 241, 245, 249;
+  --text-secondary: 148, 163, 184;
   --border-color: 55, 65, 81;
-  --accent-color: 255, 86, 86;
-  --accent-light: 255, 179, 179;
-  --accent-dark: 204, 51, 51;
-  --hover-bg: 31, 41, 55;
+  --accent-color: 239, 68, 68;
+  --accent-light: 239, 68, 68, 0.1;
+  --accent-text: 255, 255, 255;
+  --hover-bg: 30, 41, 59;
+  --secondary-bg: 31, 41, 55;
   --speed-lines: 38, 47, 61;
+  --pattern-color: 255, 255, 255, 0.1;
+  --dot-size: 2px;
+  --dot-space: 22px;
 }
 
 body {
   color: rgb(var(--text-primary));
   background: 
-    repeating-linear-gradient(
-      45deg,
-      rgb(var(--speed-lines)) 0px,
-      rgb(var(--speed-lines)) 2px,
-      transparent 2px,
-      transparent 10px
+    /* Сетка точек */
+    radial-gradient(circle at var(--dot-space) var(--dot-space),
+      rgba(var(--pattern-color)) var(--dot-size),
+      transparent var(--dot-size)
     ),
+    radial-gradient(circle at calc(var(--dot-space) / 2) calc(var(--dot-space) / 2),
+      rgba(var(--pattern-color)) calc(var(--dot-size) / 2),
+      transparent calc(var(--dot-size) / 2)
+    ),
+    /* Основной градиент */
     linear-gradient(
-      180deg, 
-      rgb(var(--background-start-rgb)),
-      rgb(var(--background-end-rgb))
+      45deg,
+      rgba(var(--background-start-rgb), 0.95),
+      rgba(var(--background-end-rgb), 0.95)
     );
+  background-size: var(--dot-space) var(--dot-space), var(--dot-space) var(--dot-space), 400% 400%;
+  background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2), 0 0;
+  background-attachment: fixed;
+  animation: gradientAnimation 15s ease infinite;
   min-height: 100vh;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1rem;
@@ -76,53 +91,88 @@ body {
   -moz-osx-font-smoothing: none;
 }
 
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2), 0% 50%;
+  }
+  50% {
+    background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2), 100% 50%;
+  }
+  100% {
+    background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2), 0% 50%;
+  }
+}
+
+main.container {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
 .card {
   background: rgb(var(--card-background));
   border: 3px solid rgb(var(--border-color));
-  border-radius: 2px;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   margin-bottom: 32px;
   padding: 24px;
   box-shadow: 
     6px 6px 0 rgb(var(--border-color));
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 20px),
-    calc(100% - 20px) 100%,
-    0 100%
-  );
+  overflow: hidden;
 }
 
-.card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 
-    8px 8px 0 rgb(var(--border-color));
+.card::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  background: rgb(var(--accent-color));
+  border-radius: 50%;
+  opacity: 0.15;
+  z-index: 0;
 }
 
 .card::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
-  background: rgb(var(--border-color));
-  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  bottom: -5px;
+  left: -5px;
+  width: 30px;
+  height: 30px;
+  background: rgb(var(--accent-color));
+  border-radius: 50%;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 
+    9px 9px 0 rgb(var(--border-color));
+}
+
+/* Стили для текста комментариев */
+.comment p {
+  position: relative;
+  z-index: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .btn-primary {
   background: rgb(var(--accent-color));
   color: white;
   border: 2px solid rgb(var(--border-color));
-  border-radius: 2px;
+  border-radius: 8px;
   padding: 0.75rem 2rem;
   font-family: 'Tektur', sans-serif;
   font-weight: 600;
   font-size: 1.25rem;
   letter-spacing: 0.02em;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-transform: uppercase;
   box-shadow: 4px 4px 0 rgb(var(--border-color));
   position: relative;
@@ -146,7 +196,7 @@ body {
   background: linear-gradient(
     45deg,
     transparent,
-    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.2),
     transparent
   );
   transform: rotate(45deg);
@@ -156,16 +206,17 @@ body {
 
 @keyframes shine {
   0% {
-    transform: translateX(-100%) rotate(45deg);
+    transform: translateX(-150%) rotate(45deg);
   }
   100% {
-    transform: translateX(100%) rotate(45deg);
+    transform: translateX(150%) rotate(45deg);
   }
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 rgb(var(--border-color));
+  background: rgb(var(--accent-color), 0.9);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -183,12 +234,12 @@ body {
   width: 100%;
   padding: 1rem;
   border: 2px solid rgb(var(--border-color));
-  border-radius: 2px;
+  border-radius: 8px;
   background: rgb(var(--card-background));
   color: rgb(var(--text-primary));
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   resize: none;
   box-shadow: 4px 4px 0 rgb(var(--border-color));
   -webkit-font-smoothing: none;
@@ -199,6 +250,7 @@ body {
   outline: none;
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 rgb(var(--border-color));
+  border-color: rgb(var(--accent-color));
 }
 
 .input-primary::placeholder {
@@ -209,85 +261,178 @@ body {
 .comment {
   background: rgb(var(--card-background));
   border: 2px solid rgb(var(--border-color));
-  border-radius: 2px;
+  border-radius: 10px;
   position: relative;
-  margin: 20px 0 20px 30px;
-  padding: 16px;
+  margin: 4px 0;
+  padding: 12px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1rem;
-  transition: all 0.2s ease;
-  box-shadow: 3px 3px 0 rgb(var(--border-color));
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 100%,
-    20px 100%,
-    0 calc(100% - 20px)
-  );
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 2px 2px 0 rgb(var(--border-color), 0.5);
+  overflow: hidden;
 }
 
-.comment::before {
-  content: '💥';
+/* Стили для вложенных комментариев */
+.comment-wrapper {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Стили для соединительных линий комментариев */
+.thread-line {
   position: absolute;
-  left: -30px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.5rem;
-  filter: grayscale(100%);
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background-color: rgb(var(--border-color));
+  opacity: 0.4;
+  z-index: 1;
+}
+
+.connect-line {
+  position: absolute;
+  left: -1.25rem;
+  top: 1.25rem;
+  width: 1.25rem;
+  height: 2px;
+  background-color: rgb(var(--border-color));
+  opacity: 0.5;
+  z-index: 1;
 }
 
 .comment:hover {
-  transform: translate(-1px, -1px);
+  transform: translate(-2px, -2px);
   box-shadow: 4px 4px 0 rgb(var(--border-color));
+}
+
+.comment:hover .connect-line,
+.comment:hover ~ .replies-container .thread-line,
+.comment-wrapper:hover > .thread-line,
+.comment-wrapper:hover > .connect-line {
+  opacity: 0.8;
+  background-color: rgb(var(--accent-color));
+}
+
+.replies-container {
+  margin-top: -2px;
+  padding-top: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.replies-container:hover > .thread-line {
+  opacity: 0.8;
+  background-color: rgb(var(--accent-color));
 }
 
 /* Оптимизация для мобильных устройств */
 @media (max-width: 768px) {
   body {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
   
   .btn-primary {
-    font-family: 'Tektur', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 8px;
   }
   
   .input-primary {
-    font-size: 0.875rem;
-    padding: 0.75rem;
+    padding: 8px 12px;
   }
-
+  
   .card {
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 16px;
+    margin-bottom: 16px;
   }
-
+  
   .container {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 12px;
   }
-
+  
   textarea.input-primary {
     min-height: 80px;
   }
-
+  
   .theme-toggle {
-    top: 0.5rem;
-    right: 0.5rem;
     width: 40px;
     height: 40px;
+    right: 12px;
+    bottom: 12px;
   }
-
+  
   form {
-    display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 8px;
+  }
+  
+  form button {
+    align-self: flex-end;
+  }
+  
+  .comment {
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 8px;
+    position: relative;
+    overflow: visible;
   }
 
-  form button {
-    width: 100%;
+  .reply-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+  }
+
+  .reply-button svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .comment-wrapper {
+    margin-left: 4px;
+  }
+
+  .comment-wrapper.ml-6 {
+    margin-left: 1rem;
+  }
+
+  .connect-line {
+    left: -0.75rem !important;
+    width: 0.75rem !important;
+  }
+
+  .thread-line {
+    left: 0 !important;
+  }
+
+  .replies-container {
+    padding-left: 0.5rem !important;
+    margin-left: 0.5rem !important;
+  }
+
+  :root {
+    --pattern-color: 107, 114, 128, 0.2;
+  }
+  
+  [data-theme='dark'] {
+    --pattern-color: 255, 255, 255, 0.15;
+  }
+  
+  .avatar-accent {
+    min-width: 32px;
+    min-height: 32px;
+  }
+  
+  /* Улучшения для мобильных устройств */
+  .comment p {
+    word-break: break-word;
+  }
+  
+  .comment .flex-col {
+    max-width: calc(100% - 50px);
   }
 }
 
@@ -312,7 +457,7 @@ body {
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.3s ease-out forwards;
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-out {
@@ -363,14 +508,14 @@ body {
   width: 48px;
   height: 48px;
   border: 2px solid rgb(var(--border-color));
-  border-radius: 2px;
+  border-radius: 10px;
   background: rgb(var(--card-background));
   color: rgb(var(--text-primary));
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 3px 3px 0 rgb(var(--border-color));
   transform: translate(0, 0);
   padding: 0;
@@ -410,4 +555,241 @@ body {
 
 .comments-container[data-visible="false"] {
   display: none;
+}
+
+/* Стили для кнопки ответа */
+.reply-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(var(--border-color));
+  border-radius: 8px;
+  background: rgb(var(--card-background));
+  color: rgb(var(--text-secondary));
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 2px 2px 0 rgb(var(--border-color), 0.5);
+  z-index: 5;
+}
+
+.reply-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgb(var(--border-color));
+  background: rgba(var(--accent-color), 0.1);
+  color: rgb(var(--accent-color));
+}
+
+.reply-button:active {
+  transform: translate(0, 0);
+  box-shadow: 1px 1px 0 rgb(var(--border-color));
+}
+
+/* Плавная прокрутка для всего сайта */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Новые стили для цветового акцента на аватарках */
+.avatar-accent {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar-accent::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    rgba(var(--accent-color), 0.1),
+    rgba(var(--accent-color), 0.3),
+    rgba(var(--accent-color), 0.1)
+  );
+  animation: rotateBg 6s linear infinite;
+}
+
+@keyframes rotateBg {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Эффект подсветки для активных элементов */
+.highlight-glow {
+  position: relative;
+}
+
+.highlight-glow::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(
+    circle at center,
+    rgba(var(--accent-color), 0.3) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 12px;
+}
+
+.highlight-glow:hover::after {
+  opacity: 0.5;
+}
+
+/* Стили для Markdown-разметки */
+.prose {
+  max-width: 65ch;
+  color: inherit;
+}
+
+.prose a {
+  color: rgb(var(--accent-color));
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: inherit;
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.625em;
+}
+
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.625em;
+}
+
+.prose h1 {
+  font-weight: 800;
+  font-size: 1.5em;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+
+.prose h2 {
+  font-weight: 700;
+  font-size: 1.25em;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+
+.prose h3 {
+  font-weight: 600;
+  font-size: 1.125em;
+  margin-top: 1.125em;
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+
+.prose blockquote {
+  font-weight: 500;
+  font-style: italic;
+  border-left: 0.25em solid rgb(var(--accent-color));
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875em;
+  font-weight: 600;
+  background-color: rgba(var(--accent-color), 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+}
+
+.prose pre {
+  background-color: rgba(var(--accent-color), 0.05);
+  border-radius: 0.375em;
+  padding: 0.75em 1em;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  font-weight: 400;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375em;
+}
+
+.prose hr {
+  border-color: rgba(var(--accent-color), 0.2);
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.prose table {
+  width: 100%;
+  table-layout: auto;
+  text-align: left;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border-collapse: collapse;
+}
+
+.prose thead {
+  border-bottom: 1px solid rgba(var(--accent-color), 0.2);
+}
+
+.prose th {
+  font-weight: 600;
+  padding: 0.5em;
+  vertical-align: bottom;
+}
+
+.prose td {
+  padding: 0.5em;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(var(--accent-color), 0.1);
+}
+
+/* Темная тема для Markdown */
+.dark .prose code {
+  background-color: rgba(var(--accent-color), 0.15);
+}
+
+.dark .prose pre {
+  background-color: rgba(var(--accent-color), 0.1);
+}
+
+.dark .prose blockquote {
+  border-left-color: rgba(var(--accent-color), 0.8);
+}
+
+.dark .prose hr {
+  border-color: rgba(var(--accent-color), 0.3);
+}
+
+.dark .prose thead {
+  border-bottom-color: rgba(var(--accent-color), 0.3);
+}
+
+.dark .prose td {
+  border-bottom-color: rgba(var(--accent-color), 0.2);
 }

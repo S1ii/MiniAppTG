@@ -10,14 +10,14 @@ export default function ThemeToggle() {
     // При монтировании компонента проверяем сохраненную тему
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
-    document.documentElement.dataset.theme = savedTheme;
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
-    document.documentElement.dataset.theme = newTheme;
+    document.documentElement.setAttribute('data-theme', newTheme);
   };
 
   return (

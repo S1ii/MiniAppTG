@@ -1,98 +1,93 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
-
-declare global {
-  interface Window {
-    Telegram?: {
-      WebApp: {
-        ready: () => void;
-        initDataUnsafe: {
-          user?: {
-            id: number;
-            username: string;
-            first_name?: string;
-            last_name?: string;
-          };
-        };
-      };
-    };
-  }
-}
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import WebApp from '@twa-dev/sdk';
 
 interface TelegramUser {
-  id: number;
-  username?: string;
+  id: string;
   first_name: string;
-  last_name?: string;
+  username?: string;
+  language_code?: string;
 }
 
-interface TelegramContext {
+interface TelegramContextType {
   user: TelegramUser | null;
   isLoading: boolean;
+  telegram: typeof WebApp | null;
 }
 
-const TelegramContext = createContext<TelegramContext>({ user: null, isLoading: true });
-
-export function useTelegram() {
-  return useContext(TelegramContext);
-}
+const TelegramContext = createContext<TelegramContextType>({
+  user: null,
+  isLoading: true,
+  telegram: null,
+});
 
 export function TelegramProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<TelegramUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [telegram, setTelegram] = useState<typeof WebApp | null>(null);
 
   useEffect(() => {
-    const initTelegram = () => {
-      if (typeof window !== 'undefined' && window.Telegram) {
-        const tg = window.Telegram.WebApp;
+    const initTelegram = async () => {
+      try {
+        // Ждем готовности WebApp
+        WebApp.ready();
 
-        // Проверяем, что приложение запущено в правильном контексте
-        if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
-          // Перенаправляем пользователя на бота
-          window.location.href = 'https://t.me/t3st1k_bot/gossip';
-          return;
+        // Получаем данные пользователя
+        const initData = WebApp.initDataUnsafe;
+        if (!initData.user) {
+          throw new Error('No user data available');
         }
 
-        tg.ready();
+        // Настраиваем внешний вид
+        WebApp.setHeaderColor(WebApp.themeParams.bg_color);
         
-        if (tg.initDataUnsafe.user) {
-          const telegramUser = tg.initDataUnsafe.user;
-          const user: TelegramUser = {
-            id: telegramUser.id,
-            username: telegramUser.username,
-            first_name: telegramUser.first_name || 'Аноним',
-            last_name: telegramUser.last_name
-          };
-          setUser(user);
+        // Включаем подтверждение закрытия на мобильных устройствах
+        if (WebApp.platform === 'android' || WebApp.platform === 'ios') {
+          WebApp.enableClosingConfirmation();
         }
+
+        // Настраиваем основную тему
+        const root = document.documentElement;
+        const isDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // Устанавливаем тему через data-theme атрибут
+        root.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
+
+        // Слушаем изменения темы
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        mediaQuery.addEventListener('change', (e) => {
+          root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        });
+
+        setTelegram(WebApp);
+        setUser({
+          id: initData.user.id.toString(),
+          first_name: initData.user.first_name,
+          username: initData.user.username,
+          language_code: initData.user.language_code
+        });
+      } catch (error) {
+        console.error('Failed to initialize Telegram Mini App:', error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
-    // Проверяем, загружен ли уже скрипт
-    if (typeof window !== 'undefined' && window.Telegram) {
-      initTelegram();
-    } else {
-      // Если скрипт еще не загружен, ждем его загрузки
-      const interval = setInterval(() => {
-        if (typeof window !== 'undefined' && window.Telegram) {
-          clearInterval(interval);
-          initTelegram();
-        }
-      }, 100);
-
-      return () => clearInterval(interval);
-    }
+    initTelegram();
   }, []);
 
-  if (isLoading) {
-    return <div>Загрузка...</div>;
-  }
-
   return (
-    <TelegramContext.Provider value={{ user, isLoading }}>
+    <TelegramContext.Provider value={{ user, isLoading, telegram }}>
       {children}
     </TelegramContext.Provider>
   );
+}
+
+export function useTelegram() {
+  const context = useContext(TelegramContext);
+  if (context === undefined) {
+    throw new Error('useTelegram must be used within a TelegramProvider');
+  }
+  return context;
 } 

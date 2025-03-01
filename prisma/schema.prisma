@@ -12,6 +12,7 @@ datasource db {
 
 model Gossip {
   id             String    @id @default(cuid())
+  title          String?   // Добавляем поле для заголовка (опциональное)
   content        String
   authorId       String
   authorUsername String
@@ -29,6 +30,14 @@ model Comment {
   createdAt     DateTime @default(now())
   gossip        Gossip   @relation(fields: [gossipId], references: [id])
   gossipId      String
+
+  // Новые поля для вложенных комментариев
+  parentId      String?  // Опциональная ссылка на родительский комментарий
+  level         Int      @default(0)
+
+  // Опциональная связь для родительского комментария
+  parent        Comment? @relation("CommentToComment", fields: [parentId], references: [id])
+  replies       Comment[] @relation("CommentToComment")
 }
 
 model Like {

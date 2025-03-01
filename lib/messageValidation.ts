@@ -1,5 +1,5 @@
 // Минимальная и максимальная длина сообщения
-export const MIN_MESSAGE_LENGTH = 50;
+export const MIN_MESSAGE_LENGTH = 20;
 export const MAX_MESSAGE_LENGTH = 1000;
 
 // Время между сообщениями в миллисекундах

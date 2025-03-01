@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from telegram.ext import Application
 
 from database import db
-from notifications import notify_about_new_gossip, notify_about_new_comment
+from notifications import notify_about_new_gossip, notify_about_new_comment, notify_about_comment_reply
 
 # Настройка логирования
 logging.basicConfig(
@@ -35,6 +35,15 @@ class CommentNotification(BaseModel):
     comment_author_username: str
     gossip_content: str
     comment_content: str
+    parent_comment_content: str | None = None
+    parent_comment_author: str | None = None
+
+class CommentReplyNotification(BaseModel):
+    parent_comment_author_id: str
+    comment_author_username: str
+    gossip_content: str
+    comment_content: str
+    parent_comment_content: str
 
 class BotUserResponse(BaseModel):
     id: str
@@ -90,9 +99,31 @@ async def notify_comment(notification: CommentNotification):
             notification.gossip_author_id,
             notification.comment_author_username,
             notification.gossip_content,
-            notification.comment_content
+            notification.comment_content,
+            notification.parent_comment_content,
+            notification.parent_comment_author
         )
         return {"status": "success"}
     except Exception as e:
         logger.error(f"Error sending comment notification: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/notify/comment_reply")
+async def notify_comment_reply(notification: CommentReplyNotification):
+    """Эндпоинт для отправки уведомлений о ответе на комментарий"""
+    try:
+        if not bot_app:
+            raise HTTPException(status_code=500, detail="Bot application not initialized")
+        
+        await notify_about_comment_reply(
+            bot_app,
+            notification.parent_comment_author_id,
+            notification.comment_author_username,
+            notification.gossip_content,
+            notification.comment_content,
+            notification.parent_comment_content
+        )
+        return {"status": "success"}
+    except Exception as e:
+        logger.error(f"Error sending comment reply notification: {e}")
         raise HTTPException(status_code=500, detail=str(e)) 
