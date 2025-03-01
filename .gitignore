@@ -93,12 +93,12 @@ web_modules/
 .parcel-cache
 
 # Next.js build output
-.next
-out
+.next/
+out/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+dist/
 
 # Gatsby files
 .cache/
@@ -139,8 +139,8 @@ logs
 **/*.backup.*
 **/*.back.*
 
-node_modules
-bower_components
+node_modules/
+bower_components/
 
 *.sublime*
 
@@ -299,5 +299,65 @@ cython_debug/
 ## ignoring target file
 target/
 
+# Next.js
+.vercel/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+ENV/
+env/
+.env.bak
+.venv/
+env.bak/
+venv.bak/
+
+# Databases
+*.db
+*.db.backup
+*.sqlite3
+*.sqlite3-journal
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Build files
+*.tsbuildinfo
+
+# Misc
+.cache/
+.parcel-cache/
+.npm/
+.eslintcache/
+.yarn/
+.pnp.*
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Web,Node,pydev,react,Python,dotenv,Database,Java-Web,py
