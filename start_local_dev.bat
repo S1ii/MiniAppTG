@@ -62,13 +62,13 @@ timeout /t 10 /nobreak
 
 REM Запуск loophole для создания туннелей в отдельных окнах
 echo Создание туннелей через loophole...
-start "Loophole App" cmd /k "loophole http 3000 --hostname YOUR-DOMAIN-HERE-app"
-start "Loophole WS" cmd /k "loophole http 3001 --hostname YOUR-DOMAIN-HERE-ws"
+REM start "Loophole App" cmd /k "loophole http 3000 --hostname bot-gossip-app"
+REM start "Loophole WS" cmd /k "loophole http 3001 --hostname bot-gossip-ws"
 
 echo.
 echo Туннели созданы. Используйте следующие URL в вашем .env.local файле:
-echo WEBAPP_URL=https://YOUR-DOMAIN-HERE-app.loophole.site
-echo NEXT_PUBLIC_WS_URL=wss://YOUR-DOMAIN-HERE-ws.loophole.site
+echo WEBAPP_URL=https://bot-gossip-app.loophole.site
+echo NEXT_PUBLIC_WS_URL=wss://bot-gossip-ws.loophole.site
 echo.
 echo Для остановки закройте все открытые окна командной строки
 echo Чтобы деактивировать виртуальное окружение Python, выполните 'deactivate'
