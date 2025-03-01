@@ -6,7 +6,7 @@
 
 - Next.js
 - TypeScript
-- MongoDB
+- SQLite3
 - Tailwind CSS
 - Telegram Web App SDK
 
@@ -25,7 +25,14 @@ npm install
 
 3. Создайте файл `.env.local` и добавьте следующие переменные окружения:
 ```
-MONGODB_URI=your_mongodb_connection_string
+BOT_TOKEN=""
+WEBAPP_URL=""
+
+# База данных
+DATABASE_URL=""
+
+# WebSocket URL
+NEXT_PUBLIC_WS_URL="" 
 ```
 
 4. Запустите приложение в режиме разработки:
@@ -62,3 +69,31 @@ BOT_TOKEN=your_bot_token
 - Комментарии
 - Интеграция с Telegram Web App
 - Адаптивный дизайн 
+
+## Локальная разработка
+
+### Требования
+- Node.js и npm
+- [Loophole](https://loophole.cloud/download) для создания туннеля
+
+### Запуск локально
+1. Клонируйте репозиторий
+2. Установите зависимости: `npm install`
+3. Запустите скрипт `start_local_dev.bat` (Windows) или `start_local_dev.sh` (Linux/Mac)
+4. Откроются туннели через loophole.cloud, которые предоставят публичные URL для вашего локального сервера
+5. Обновите файл `.env.local` с полученными URL:
+   ```
+   WEBAPP_URL=https://ваш-проект-app.loophole.site
+   NEXT_PUBLIC_WS_URL=wss://ваш-проект-ws.loophole.site
+   ```
+
+### Ручной запуск
+1. Запустите ваше приложение: `npm start`
+2. В отдельных терминалах запустите loophole для каждого порта:
+   ```
+   loophole http 3000 --hostname ваш-проект-app
+   loophole http 3001 --hostname ваш-проект-ws
+   ```
+
+### Примечание
+Если ваше приложение использует только один порт (3000), то достаточно создать только один туннель. 
