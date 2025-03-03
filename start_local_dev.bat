@@ -62,8 +62,8 @@ timeout /t 10 /nobreak
 
 REM Запуск loophole для создания туннелей в отдельных окнах
 echo Создание туннелей через loophole...
-start "Loophole App" cmd /k "loophole http 3000 --hostname YOUR-DOMAIN-HERE-app"
-start "Loophole WS" cmd /k "loophole http 3001 --hostname YOUR-DOMAIN-HERE-ws"
+start "Loophole App" cmd /k "loophole http 3000 --hostname test1k0-app"
+start "Loophole WS" cmd /k "loophole http 3001 --hostname test1k0-ws"
 
 echo.
 echo Туннели созданы. Используйте следующие URL в вашем .env.local файле:
